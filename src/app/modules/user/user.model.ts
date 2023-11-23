@@ -75,12 +75,12 @@ const userSchema = new Schema<TUser, UserModel>({
   },
 });
 
-// create user model
-const User = model<TUser, UserModel>("User", userSchema);
-
 // define static method functionality
-userSchema.statics.isUserExists = async (userId: string) => {
+userSchema.statics.isUserExists = async (userId: number) => {
   return await User.findOne({ userId });
 };
+
+// create user model
+const User = model<TUser, UserModel>("User", userSchema);
 
 export default User;
