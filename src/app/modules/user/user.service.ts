@@ -1,5 +1,7 @@
+import config from "../../config/config";
 import TUser from "./user.interface";
 import User from "./user.model";
+import bcrypt from "bcrypt";
 
 // create a new user
 const createUserIntoDB = async (userInfo: TUser) => {
@@ -8,6 +10,15 @@ const createUserIntoDB = async (userInfo: TUser) => {
     if (await User.isUserExists(userInfo.userId)) {
       throw new Error("User already exists!");
     }
+
+    // hashing the password
+    const hashedPassword = await bcrypt.hash(
+      userInfo.password,
+      Number(config.salt_round),
+    );
+
+    // set the hash password
+    userInfo.password = hashedPassword;
 
     const result = await User.create(userInfo);
     // eslint-disable-next-line no-unused-vars
