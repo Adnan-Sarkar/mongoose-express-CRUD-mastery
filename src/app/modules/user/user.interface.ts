@@ -24,11 +24,12 @@ interface TUser {
     country: string;
   };
   orders?: TOrder[];
+  __v?: number;
 }
 
 // define static method
 export interface UserModel extends Model<TUser> {
-  isUserExists(userId: string): Promise<TUser | null>;
+  isUserExists(userId: number): Promise<TUser | null>;
 }
 
 export default TUser;
