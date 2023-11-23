@@ -1,12 +1,12 @@
-import express, { Request, Response } from "express";
+import express from "express";
+import cors from "cors";
+import { UserRoutes } from "./app/modules/user/user.route";
 
 const app = express();
 
-app.get("/", (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    data: "Hellow World!",
-  });
-});
+// middlewares
+app.use(express.json());
+app.use(cors());
+app.use("/api", UserRoutes);
 
 export default app;
