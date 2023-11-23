@@ -88,9 +88,30 @@ const updateUser = async (id: number, updatedInfo: TUser) => {
   }
 };
 
+// delete a user
+const deleteUser = async (id: number) => {
+  try {
+    // check user exists or not
+    if (await User.isUserExists(id)) {
+      const result = await User.deleteOne({
+        userId: id,
+      });
+
+      if (result.deletedCount === 1) {
+        return result;
+      }
+    }
+
+    throw new Error("No user found!");
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getUserById,
   updateUser,
+  deleteUser,
 };

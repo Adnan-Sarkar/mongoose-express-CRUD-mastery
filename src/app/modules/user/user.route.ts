@@ -11,6 +11,7 @@ userRouter
 userRouter
   .route("/users/:userId")
   .get(UserControllers.getUserById)
-  .put(UserControllers.updateUser);
+  .put(UserControllers.updateUser)
+  .delete(UserControllers.deleteUser);
 
 export const UserRoutes = userRouter;
