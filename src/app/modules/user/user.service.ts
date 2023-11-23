@@ -36,7 +36,28 @@ const getAllUsersFromDB = async () => {
   }
 };
 
+// retrieve a specific user by ID
+const getUserById = async (id: number) => {
+  try {
+    if (await User.isUserExists(id)) {
+      const user = await User.findOne({ userId: id }).select({
+        _id: 0,
+        __v: 0,
+        orders: 0,
+        password: 0,
+      });
+
+      return user;
+    }
+
+    throw new Error("No user found!");
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
+  getUserById,
 };

@@ -8,4 +8,6 @@ userRouter
   .post(UserControllers.createUser)
   .get(UserControllers.getAllUsers);
 
+userRouter.route("/users/:userId").get(UserControllers.getUserById);
+
 export const UserRoutes = userRouter;

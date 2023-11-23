@@ -8,7 +8,7 @@ const createUser = async (req: Request, res: Response) => {
 
     const newUserInfo = await UserServices.createUserIntoDB(userInfo);
 
-    res.status(400).json({
+    res.status(201).json({
       success: true,
       message: "User created successfully!",
       data: newUserInfo,
@@ -30,7 +30,7 @@ const getAllUsers = async (_req: Request, res: Response) => {
   try {
     const userList = await UserServices.getAllUsersFromDB();
 
-    res.status(400).json({
+    res.status(200).json({
       success: true,
       message: "Users fetched successfully!",
       data: userList,
@@ -47,7 +47,32 @@ const getAllUsers = async (_req: Request, res: Response) => {
   }
 };
 
+// retrieve a specific user by ID
+const getUserById = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await UserServices.getUserById(Number(userId));
+
+    res.status(200).json({
+      success: true,
+      message: "User fetched successfully!",
+      data: user,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "User not found!",
+      error: {
+        code: 400,
+        description: error.message || "User not found!",
+      },
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
+  getUserById,
 };
