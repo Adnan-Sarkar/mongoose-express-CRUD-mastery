@@ -1,20 +1,25 @@
 import { Schema, model } from "mongoose";
 import TUser, { TOrder, UserModel } from "./user.interface";
 
-const orderSchema = new Schema<TOrder>({
-  productName: {
-    type: String,
-    required: true,
+const orderSchema = new Schema<TOrder>(
+  {
+    productName: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+    },
   },
-  price: {
-    type: Number,
-    required: true,
+  {
+    _id: false,
   },
-  quantity: {
-    type: Number,
-    required: true,
-  },
-});
+);
 
 const userSchema = new Schema<TUser, UserModel>({
   userId: {
