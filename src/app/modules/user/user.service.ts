@@ -56,8 +56,41 @@ const getUserById = async (id: number) => {
   }
 };
 
+// update user information
+const updateUser = async (id: number, updatedInfo: TUser) => {
+  try {
+    // check using is exists or not
+    if (await User.isUserExists(id)) {
+      const updatedUser = await User.findOneAndUpdate(
+        {
+          userId: id,
+        },
+        {
+          $set: updatedInfo,
+        },
+        {
+          new: true,
+          runValidators: true,
+        },
+      ).select({
+        _id: 0,
+        __v: 0,
+        orders: 0,
+        password: 0,
+      });
+
+      return updatedUser;
+    }
+
+    throw new Error("No user found!");
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getUserById,
+  updateUser,
 };
