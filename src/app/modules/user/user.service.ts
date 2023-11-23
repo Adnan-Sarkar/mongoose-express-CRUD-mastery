@@ -9,10 +9,9 @@ const createUserIntoDB = async (userInfo: TUser) => {
       throw new Error("User already exists!");
     }
 
-    const newUser = (await User.create(userInfo)).toObject();
-
-    delete newUser.orders, newUser.password, newUser._id, newUser.__v;
-
+    const result = await User.create(userInfo);
+    // eslint-disable-next-line no-unused-vars
+    const { password, orders, _id, __v, ...newUser } = result.toObject();
     return newUser;
   } catch (error: any) {
     throw new Error(error.message);
