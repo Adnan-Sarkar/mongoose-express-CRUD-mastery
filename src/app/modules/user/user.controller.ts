@@ -120,10 +120,61 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+// add new product in Order array
+const addProductIntoOrder = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const productInfo = req.body;
+
+    await UserServices.addNewOrder(Number(userId), productInfo);
+
+    res.status(200).json({
+      success: true,
+      message: "Order created successfully!",
+      data: null,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "User not found!",
+      error: {
+        code: 400,
+        description: error.message || "User not found!",
+      },
+    });
+  }
+};
+
+// retrieve all orders for a specific user
+const getAllOrderOfUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const orderList = await UserServices.getAllOrdersOfUser(Number(userId));
+
+    res.status(200).json({
+      success: true,
+      message: "Order fetched successfully!",
+      data: orderList,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "User not found!",
+      error: {
+        code: 400,
+        description: error.message || "User not found!",
+      },
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
+  addProductIntoOrder,
+  getAllOrderOfUser,
 };

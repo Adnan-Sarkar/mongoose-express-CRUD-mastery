@@ -14,4 +14,9 @@ userRouter
   .put(UserControllers.updateUser)
   .delete(UserControllers.deleteUser);
 
+userRouter
+  .route("/users/:userId/orders")
+  .get(UserControllers.getAllOrderOfUser)
+  .put(UserControllers.addProductIntoOrder);
+
 export const UserRoutes = userRouter;

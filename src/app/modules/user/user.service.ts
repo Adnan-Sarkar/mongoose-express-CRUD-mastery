@@ -1,5 +1,5 @@
 import config from "../../config/config";
-import TUser from "./user.interface";
+import TUser, { TOrder } from "./user.interface";
 import User from "./user.model";
 import bcrypt from "bcrypt";
 
@@ -72,6 +72,15 @@ const updateUser = async (id: number, updatedInfo: TUser) => {
   try {
     // check using is exists or not
     if (await User.isUserExists(id)) {
+      // hashing the password
+      const hashedPassword = await bcrypt.hash(
+        updatedInfo.password,
+        Number(config.salt_round),
+      );
+
+      // set the hash password
+      updatedInfo.password = hashedPassword;
+
       const updatedUser = await User.findOneAndUpdate(
         {
           userId: id,
@@ -119,10 +128,62 @@ const deleteUser = async (id: number) => {
   }
 };
 
+// add new product in Order array
+const addNewOrder = async (id: number, product: TOrder) => {
+  try {
+    // check user exists or not
+    if (await User.isUserExists(id)) {
+      const result = await User.findOneAndUpdate(
+        {
+          userId: id,
+        },
+        {
+          $push: {
+            orders: product,
+          },
+        },
+        {
+          runValidators: true,
+        },
+      );
+
+      console.log(result);
+
+      return;
+    }
+
+    throw new Error("No user found!");
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+// retrieve all orders for a specific user
+const getAllOrdersOfUser = async (id: number) => {
+  try {
+    if (await User.isUserExists(id)) {
+      const orderList = await User.findOne({
+        userId: id,
+      }).select({
+        orders: 1,
+        _id: 0,
+      });
+
+      return orderList;
+    }
+
+    throw new Error("No user found!");
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getUserById,
   updateUser,
   deleteUser,
+  addNewOrder,
+  getAllOrdersOfUser,
 };
