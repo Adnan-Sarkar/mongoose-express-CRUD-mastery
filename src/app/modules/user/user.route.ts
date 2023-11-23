@@ -3,7 +3,9 @@ import { UserControllers } from "./user.controller";
 
 const userRouter = exxpress.Router();
 
-// userRouter.post("/users", userControllers.createUser);
-userRouter.route("/users").post(UserControllers.createUser);
+userRouter
+  .route("/users")
+  .post(UserControllers.createUser)
+  .get(UserControllers.getAllUsers);
 
 export const UserRoutes = userRouter;
