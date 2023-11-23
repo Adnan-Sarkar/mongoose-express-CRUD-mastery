@@ -19,4 +19,8 @@ userRouter
   .get(UserControllers.getAllOrderOfUser)
   .put(UserControllers.addProductIntoOrder);
 
+userRouter
+  .route("/users/:userId/orders/total-price")
+  .get(UserControllers.getTotalPriceOfOrders);
+
 export const UserRoutes = userRouter;

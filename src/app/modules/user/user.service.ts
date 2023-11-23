@@ -178,6 +178,57 @@ const getAllOrdersOfUser = async (id: number) => {
   }
 };
 
+// calculate total price of orders for a specific user
+const calculateTotalPriceOfOrders = async (id: number) => {
+  try {
+    if (await User.isUserExists(id)) {
+      const totalPrice = await User.aggregate([
+        // statge 1 matching document
+        {
+          $match: {
+            userId: id,
+          },
+        },
+
+        // stage 2 unwind the orders array
+        {
+          $unwind: "$orders",
+        },
+
+        // stage 3 create group and calculate total price
+        {
+          $group: {
+            _id: null,
+            totalPrice: {
+              $sum: {
+                $multiply: ["$orders.price", "$orders.quantity"],
+              },
+            },
+          },
+        },
+
+        // stage 4 re-shape the outpur document
+        {
+          $project: {
+            totalPrice: 1,
+            _id: 0,
+          },
+        },
+      ]);
+
+      if (totalPrice[0]) {
+        return totalPrice[0];
+      }
+
+      throw new Error("Orders is empty");
+    }
+
+    throw new Error("No user found!");
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
@@ -186,4 +237,5 @@ export const UserServices = {
   deleteUser,
   addNewOrder,
   getAllOrdersOfUser,
+  calculateTotalPriceOfOrders,
 };
