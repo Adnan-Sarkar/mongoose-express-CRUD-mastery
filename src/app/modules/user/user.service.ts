@@ -25,6 +25,7 @@ const createUserIntoDB = async (userInfo: TUser) => {
     const { password, orders, _id, __v, ...newUser } = result.toObject();
     return newUser;
   } catch (error: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     throw new Error(error.message);
   }
 };
@@ -61,7 +62,7 @@ const getUserById = async (id: number) => {
       return user;
     }
 
-    throw new Error(`User with ID ${id} not found!`);
+    throw new Error(`User with ID: (${id}) not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -102,7 +103,7 @@ const updateUser = async (id: number, updatedInfo: TUser) => {
       return updatedUser;
     }
 
-    throw new Error(`User with ID ${id} not found!`);
+    throw new Error(`User with ID: (${id}) not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -133,7 +134,7 @@ const addNewOrder = async (id: number, product: TOrder) => {
   try {
     // check user exists or not
     if (await User.isUserExists(id)) {
-      const result = await User.findOneAndUpdate(
+      await User.findOneAndUpdate(
         {
           userId: id,
         },
@@ -147,12 +148,10 @@ const addNewOrder = async (id: number, product: TOrder) => {
         },
       );
 
-      console.log(result);
-
       return;
     }
 
-    throw new Error(`User with ID ${id} not found!`);
+    throw new Error(`User with ID: (${id}) not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -172,7 +171,7 @@ const getAllOrdersOfUser = async (id: number) => {
       return orderList;
     }
 
-    throw new Error(`User with ID ${id} not found!`);
+    throw new Error(`User with ID: (${id}) not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -223,7 +222,7 @@ const calculateTotalPriceOfOrders = async (id: number) => {
       throw new Error("Orders is empty");
     }
 
-    throw new Error(`User with ID ${id} not found!`);
+    throw new Error(`User with ID: (${id}) not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
