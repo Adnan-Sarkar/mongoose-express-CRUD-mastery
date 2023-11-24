@@ -1,12 +1,19 @@
 import { Request, Response } from "express";
 import { UserServices } from "./user.service";
+import {
+  orderSchemaValidation,
+  userSchemaValidation,
+} from "./user.validation.zod";
 
 // create a new user
 const createUser = async (req: Request, res: Response) => {
   try {
     const userInfo = req.body;
 
-    const newUserInfo = await UserServices.createUserIntoDB(userInfo);
+    // zod validation
+    const validatedUserInfo = userSchemaValidation.parse(userInfo);
+
+    const newUserInfo = await UserServices.createUserIntoDB(validatedUserInfo);
 
     res.status(201).json({
       success: true,
@@ -16,10 +23,16 @@ const createUser = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: error.message || "User is not created",
+      message:
+        (error?.issues?.[0]?.message && error.issues[0].message) ||
+        error.message ||
+        "User is not created",
       error: {
         code: 400,
-        description: error.message || "User is not created",
+        description:
+          (error?.issues?.[0]?.message && error.issues[0].message) ||
+          error.message ||
+          "User is not created",
       },
     });
   }
@@ -77,7 +90,13 @@ const updateUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const userInfo = req.body;
 
-    const updatedUser = await UserServices.updateUser(Number(userId), userInfo);
+    // zod validation
+    const validatedUserInfo = userSchemaValidation.parse(userInfo);
+
+    const updatedUser = await UserServices.updateUser(
+      Number(userId),
+      validatedUserInfo,
+    );
 
     res.status(200).json({
       success: true,
@@ -87,10 +106,16 @@ const updateUser = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: error.message || "User not found!",
+      message:
+        (error?.issues?.[0]?.message && error.issues[0].message) ||
+        error.message ||
+        "User is not created",
       error: {
         code: 400,
-        description: error.message || "User not found!",
+        description:
+          (error?.issues?.[0]?.message && error.issues[0].message) ||
+          error.message ||
+          "User is not created",
       },
     });
   }
@@ -126,7 +151,10 @@ const addProductIntoOrder = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const productInfo = req.body;
 
-    await UserServices.addNewOrder(Number(userId), productInfo);
+    // order validation using zod
+    const validatedProductInfo = orderSchemaValidation.parse(productInfo);
+
+    await UserServices.addNewOrder(Number(userId), validatedProductInfo);
 
     res.status(200).json({
       success: true,
@@ -136,10 +164,16 @@ const addProductIntoOrder = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: error.message || "User not found!",
+      message:
+        (error?.issues?.[0]?.message && error.issues[0].message) ||
+        error.message ||
+        "User is not created",
       error: {
         code: 400,
-        description: error.message || "User not found!",
+        description:
+          (error?.issues?.[0]?.message && error.issues[0].message) ||
+          error.message ||
+          "User is not created",
       },
     });
   }

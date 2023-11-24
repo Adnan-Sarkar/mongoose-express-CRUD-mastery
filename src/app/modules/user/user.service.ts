@@ -61,7 +61,7 @@ const getUserById = async (id: number) => {
       return user;
     }
 
-    throw new Error("No user found!");
+    throw new Error(`User with ID ${id} not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -102,7 +102,7 @@ const updateUser = async (id: number, updatedInfo: TUser) => {
       return updatedUser;
     }
 
-    throw new Error("No user found!");
+    throw new Error(`User with ID ${id} not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -122,7 +122,7 @@ const deleteUser = async (id: number) => {
       }
     }
 
-    throw new Error("No user found!");
+    throw new Error(`User with ID: (${id}) not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -152,7 +152,7 @@ const addNewOrder = async (id: number, product: TOrder) => {
       return;
     }
 
-    throw new Error("No user found!");
+    throw new Error(`User with ID ${id} not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -172,7 +172,7 @@ const getAllOrdersOfUser = async (id: number) => {
       return orderList;
     }
 
-    throw new Error("No user found!");
+    throw new Error(`User with ID ${id} not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -223,7 +223,7 @@ const calculateTotalPriceOfOrders = async (id: number) => {
       throw new Error("Orders is empty");
     }
 
-    throw new Error("No user found!");
+    throw new Error(`User with ID ${id} not found!`);
   } catch (error: any) {
     throw new Error(error.message);
   }
